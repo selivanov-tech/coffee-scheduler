@@ -2,6 +2,7 @@ import { createBot } from "./bot/bot.js";
 import { createWebhookHandler } from "./bot/webhook.js";
 import { loadConfig } from "./config.js";
 import { createServer } from "./http/server.js";
+import { installLifecycle } from "./lifecycle.js";
 import { bootstrap } from "./ops/bootstrap.js";
 import { createTigrisClient } from "./ops/tigrisClient.js";
 import { UsersService } from "./ops/usersService.js";
@@ -26,6 +27,7 @@ const onWebhook = createWebhookHandler(bot, {
 });
 
 const server = createServer({ onWebhook });
+installLifecycle(server, { timeoutMs: config.caps.webhookTimeoutMs });
 
 server.listen(config.server.port, async () => {
   await bot.init();
