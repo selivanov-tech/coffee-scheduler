@@ -1,7 +1,10 @@
+import { createBot } from "./bot/bot.js";
+import { createWebhookHandler } from "./bot/webhook.js";
 import { loadConfig } from "./config.js";
 import { createServer } from "./http/server.js";
 import { bootstrap } from "./ops/bootstrap.js";
 import { createTigrisClient } from "./ops/tigrisClient.js";
+import { UsersService } from "./ops/usersService.js";
 
 const config = loadConfig();
 const tigris = createTigrisClient(config.tigris);
@@ -13,10 +16,24 @@ try {
   process.exit(1);
 }
 
-const server = createServer();
+const users = new UsersService(tigris, config.tigris.bucket);
+await users.refresh();
 
-server.listen(config.server.port, () => {
+const bot = createBot({ token: config.telegram.botToken, users });
+const onWebhook = createWebhookHandler(bot, {
+  secretToken: config.telegram.webhookSecret,
+  timeoutMs: config.caps.webhookTimeoutMs,
+});
+
+const server = createServer({ onWebhook });
+
+server.listen(config.server.port, async () => {
+  await bot.init();
+  await bot.api.setWebhook(`${config.server.publicUrl}/webhook`, {
+    secret_token: config.telegram.webhookSecret,
+    allowed_updates: ["message", "callback_query"],
+  });
   console.log(
-    `listening on :${config.server.port} — env=${config.nodeEnv}, provider=${config.ai.provider}, model=${config.ai.model}`,
+    `listening on :${config.server.port} as @${bot.botInfo.username} — env=${config.nodeEnv}`,
   );
 });
