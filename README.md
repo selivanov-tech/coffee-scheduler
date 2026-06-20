@@ -45,3 +45,7 @@ is missing or invalid. See [`.env.example`](.env.example) for the full list.
 | `npm start`         | Run the compiled app            |
 | `npm run typecheck` | Type-check without emitting     |
 | `npm test`          | Run the vitest suite            |
+
+## License
+
+MIT — see [LICENSE](LICENSE).

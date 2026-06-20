@@ -2,6 +2,8 @@
   "name": "coffee-scheduler",
   "version": "0.1.0",
   "description": "Telegram bot to chat with a coffee-shop worker schedule (Google Sheets). Portfolio project.",
+  "license": "MIT",
+  "author": "Sergio O. Sel",
   "private": true,
   "type": "module",
   "engines": {

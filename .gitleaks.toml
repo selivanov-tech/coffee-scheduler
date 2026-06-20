@@ -1,0 +1,9 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Fake values in the example env file and tests"
+paths = [
+  '''\.env\.example$''',
+  '''^tests/''',
+]
