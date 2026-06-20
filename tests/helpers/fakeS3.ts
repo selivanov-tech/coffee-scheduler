@@ -1,4 +1,8 @@
-import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  GetObjectCommand,
+  HeadBucketCommand,
+  PutObjectCommand,
+} from "@aws-sdk/client-s3";
 
 interface StoredObject {
   body: string;
@@ -28,6 +32,7 @@ export class FakeS3 {
   }
 
   send(command: unknown): Promise<unknown> {
+    if (command instanceof HeadBucketCommand) return Promise.resolve({});
     if (command instanceof GetObjectCommand) return this.get(command.input);
     if (command instanceof PutObjectCommand) return this.put(command.input);
     return Promise.reject(new Error("FakeS3: unsupported command"));
@@ -37,9 +42,7 @@ export class FakeS3 {
     return this.store.get(key);
   }
 
-  private async get(input: {
-    Key?: string;
-  }): Promise<{
+  private async get(input: { Key?: string }): Promise<{
     ETag: string;
     Body: { transformToString(): Promise<string> };
   }> {

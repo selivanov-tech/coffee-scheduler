@@ -85,6 +85,29 @@ export async function putUsers(
   }
 }
 
+export async function createUsersIfAbsent(
+  s3: S3Client,
+  bucket: string,
+  data: UsersFile,
+  key: string = USERS_KEY,
+): Promise<"created" | "exists"> {
+  try {
+    await s3.send(
+      new PutObjectCommand({
+        Bucket: bucket,
+        Key: key,
+        Body: serialize(data),
+        ContentType: "application/json",
+        IfNoneMatch: "*",
+      }),
+    );
+    return "created";
+  } catch (err) {
+    if (isPreconditionFailed(err)) return "exists";
+    throw err;
+  }
+}
+
 export async function updateUsers(
   s3: S3Client,
   bucket: string,
