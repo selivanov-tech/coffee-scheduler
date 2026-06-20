@@ -36,13 +36,19 @@ const envSchema = z
     OPS_BUCKET: z.string().min(1),
 
     // --- Runtime ---
-    NODE_ENV: z.enum(["production", "development", "test"]).default("production"),
+    NODE_ENV: z
+      .enum(["production", "development", "test"])
+      .default("production"),
     PUBLIC_URL: z.string().url(),
     PORT: z.coerce.number().int().positive().default(8080),
     SHOP_TIMEZONE: z.string().min(1).default("Asia/Almaty"),
 
     // --- Hard caps ---
-    PENDING_PROPOSAL_TTL_MINUTES: z.coerce.number().int().positive().default(10),
+    PENDING_PROPOSAL_TTL_MINUTES: z.coerce
+      .number()
+      .int()
+      .positive()
+      .default(10),
     MAX_TOOL_ITERS: z.coerce.number().int().positive().default(6),
     TOOL_TIMEOUT_MS: z.coerce.number().int().positive().default(10_000),
     AGENT_TURN_DEADLINE_MS: z.coerce.number().int().positive().default(25_000),
@@ -60,7 +66,8 @@ const envSchema = z
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["AGENT_TURN_DEADLINE_MS"],
-        message: "must be < WEBHOOK_TIMEOUT_MS (the reply must come before the webhook timeout)",
+        message:
+          "must be < WEBHOOK_TIMEOUT_MS (the reply must come before the webhook timeout)",
       });
     }
   });
@@ -98,12 +105,21 @@ function parseServiceAccount(raw: string): ServiceAccount {
   return serviceAccountSchema.parse(json);
 }
 
-export function parseConfig(env: NodeJS.ProcessEnv | Record<string, unknown>): Config {
+export function parseConfig(
+  env: NodeJS.ProcessEnv | Record<string, unknown>,
+): Config {
   const e = envSchema.parse(env);
   return {
     nodeEnv: e.NODE_ENV,
-    telegram: { botToken: e.BOT_TOKEN, webhookSecret: e.TELEGRAM_WEBHOOK_SECRET },
-    ai: { provider: e.AI_PROVIDER, model: e.AI_MODEL, anthropicApiKey: e.ANTHROPIC_API_KEY },
+    telegram: {
+      botToken: e.BOT_TOKEN,
+      webhookSecret: e.TELEGRAM_WEBHOOK_SECRET,
+    },
+    ai: {
+      provider: e.AI_PROVIDER,
+      model: e.AI_MODEL,
+      anthropicApiKey: e.ANTHROPIC_API_KEY,
+    },
     google: {
       serviceAccount: parseServiceAccount(e.GOOGLE_SERVICE_ACCOUNT_JSON),
       spreadsheetId: e.SCHEDULE_SPREADSHEET_ID,
@@ -116,7 +132,11 @@ export function parseConfig(env: NodeJS.ProcessEnv | Record<string, unknown>): C
       region: e.AWS_REGION,
       bucket: e.OPS_BUCKET,
     },
-    server: { port: e.PORT, publicUrl: e.PUBLIC_URL, timezone: e.SHOP_TIMEZONE },
+    server: {
+      port: e.PORT,
+      publicUrl: e.PUBLIC_URL,
+      timezone: e.SHOP_TIMEZONE,
+    },
     caps: {
       pendingProposalTtlMinutes: e.PENDING_PROPOSAL_TTL_MINUTES,
       maxToolIters: e.MAX_TOOL_ITERS,
@@ -134,7 +154,9 @@ export function loadConfig(): Config {
     if (err instanceof z.ZodError) {
       console.error("❌ Invalid configuration:");
       for (const issue of err.issues) {
-        console.error(`  - ${issue.path.join(".") || "(root)"}: ${issue.message}`);
+        console.error(
+          `  - ${issue.path.join(".") || "(root)"}: ${issue.message}`,
+        );
       }
     } else {
       console.error(`❌ Invalid configuration: ${(err as Error).message}`);

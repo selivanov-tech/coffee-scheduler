@@ -38,10 +38,10 @@ is missing or invalid. See [`.env.example`](.env.example) for the full list.
 
 ## Scripts
 
-| Script | What it does |
-|---|---|
-| `npm run dev` | Run with tsx and a local `.env` |
-| `npm run build` | Compile TypeScript to `dist/` |
-| `npm start` | Run the compiled app |
-| `npm run typecheck` | Type-check without emitting |
-| `npm test` | Run the vitest suite |
+| Script              | What it does                    |
+| ------------------- | ------------------------------- |
+| `npm run dev`       | Run with tsx and a local `.env` |
+| `npm run build`     | Compile TypeScript to `dist/`   |
+| `npm start`         | Run the compiled app            |
+| `npm run typecheck` | Type-check without emitting     |
+| `npm test`          | Run the vitest suite            |
