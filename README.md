@@ -4,9 +4,8 @@ A Telegram bot to chat with a coffee-shop worker schedule in plain language.
 The schedule lives in Google Sheets; the bot reads it, finds gaps, and proposes
 edits that a manager confirms before anything is written.
 
-> **Portfolio project.** This repo contains only example/fake config and synthetic
-> fixtures. Real tokens, spreadsheet IDs, branch names, and worker data are never
-> committed.
+> This repo contains only example/fake config and synthetic fixtures. Real tokens,
+> spreadsheet IDs, branch names, and worker data are never committed.
 
 ## Status
 

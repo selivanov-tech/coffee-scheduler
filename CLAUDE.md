@@ -4,7 +4,7 @@ Guidance for working in this repo.
 
 ## What this is
 
-A Telegram bot to chat with a coffee-shop schedule (Google Sheets). Node.js + TypeScript (ESM). Portfolio project — see [README](README.md).
+A Telegram bot to chat with a coffee-shop schedule (Google Sheets). Node.js + TypeScript (ESM). See [README](README.md).
 
 ## Comments
 
